@@ -1,4 +1,4 @@
-package com.example.socialnetworkproject.models.entities.DTO;
+package com.example.socialnetworkproject.models.entities.DTO.reply;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,5 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class ErrorMessage {
-    private int statusCode;
-    private StringBuilder message;
-
+    private String message;
 }

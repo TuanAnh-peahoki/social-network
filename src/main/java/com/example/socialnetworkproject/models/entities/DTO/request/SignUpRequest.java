@@ -1,4 +1,4 @@
-package com.example.socialnetworkproject.models.entities.DTO;
+package com.example.socialnetworkproject.models.entities.DTO.request;
 
 import lombok.Getter;
 import lombok.Setter;

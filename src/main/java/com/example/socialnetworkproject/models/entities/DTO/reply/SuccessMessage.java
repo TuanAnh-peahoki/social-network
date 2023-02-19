@@ -1,4 +1,4 @@
-package com.example.socialnetworkproject.models.entities.DTO;
+package com.example.socialnetworkproject.models.entities.DTO.reply;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

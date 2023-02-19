@@ -22,7 +22,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-@SolrDocument(solrCoreName = "user_collection")
 public class Users {
 
 
