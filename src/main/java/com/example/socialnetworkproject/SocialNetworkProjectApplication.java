@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @EnableJpaRepositories(basePackages = "com.example.socialnetworkproject.repositories")
+@EnableSolrRepositories(basePackages = "com.example.socialnetworkproject.solr")
 public class SocialNetworkProjectApplication {
     public static void main(String[] args) {
         SpringApplication.run(SocialNetworkProjectApplication.class, args);

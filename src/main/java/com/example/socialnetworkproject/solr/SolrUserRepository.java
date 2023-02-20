@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface SolrUserRepository extends SolrCrudRepository<UserDocument, String> {
     Optional<UserDocument> findUserDocumentByEmail(String email);
+
+    Optional<UserDocument> findUserDocumentByUserName(String userName);
 }

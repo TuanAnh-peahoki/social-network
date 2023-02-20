@@ -15,7 +15,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 
 @Configuration
-@EnableSolrRepositories(basePackages = "com.example.socialnetworkproject.solr")
 public class SolrConfiguration {
 
     private String solrHost = "http://localhost:8983/solr";

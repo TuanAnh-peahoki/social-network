@@ -1,5 +1,6 @@
 package com.example.socialnetworkproject.services.impl;
 
+import com.example.socialnetworkproject.models.entities.DTO.request.LoginRequest;
 import com.example.socialnetworkproject.models.entities.DTO.request.SignUpRequest;
 import com.example.socialnetworkproject.models.entities.Information;
 import com.example.socialnetworkproject.models.entities.Users;
@@ -51,5 +52,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         informationRepository.save(information);
 
+    }
+
+    @Override
+    public String login(LoginRequest request){
+        if()
     }
 }

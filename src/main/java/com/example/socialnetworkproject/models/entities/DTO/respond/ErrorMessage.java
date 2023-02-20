@@ -1,8 +1,7 @@
-package com.example.socialnetworkproject.models.entities.DTO.reply;
+package com.example.socialnetworkproject.models.entities.DTO.respond;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter

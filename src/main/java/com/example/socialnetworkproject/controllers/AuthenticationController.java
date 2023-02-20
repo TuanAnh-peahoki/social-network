@@ -1,9 +1,10 @@
 package com.example.socialnetworkproject.controllers;
 
 import com.example.socialnetworkproject.exception.WrongInformationException;
-import com.example.socialnetworkproject.jobs.SolrIndexingScheduler;
+import com.example.socialnetworkproject.models.entities.DTO.request.LoginRequest;
 import com.example.socialnetworkproject.models.entities.DTO.request.SignUpRequest;
-import com.example.socialnetworkproject.models.entities.DTO.reply.SuccessMessage;
+import com.example.socialnetworkproject.models.entities.DTO.respond.LoginRespond;
+import com.example.socialnetworkproject.models.entities.DTO.respond.SuccessMessage;
 import com.example.socialnetworkproject.models.entities.document.UserDocument;
 import com.example.socialnetworkproject.services.AuthenticationService;
 import com.example.socialnetworkproject.solr.SolrUserRepository;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -21,11 +24,9 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationService authenticationService;
 
-    @Autowired
+    @Resource
     private SolrUserRepository solrUserRepository;
 
-    @Autowired
-    private SolrIndexingScheduler solrIndexingScheduler;
 
     @PostMapping(value = "/signup")
     @ResponseBody
@@ -37,12 +38,13 @@ public class AuthenticationController {
             throw new WrongInformationException("The email  " + request.getEmail() +" already exists !!!");
         }
 
-        if(!request.getEmail().contains("@")){
-            throw new WrongInformationException("Wrong email format !!!");
-        }
-
         authenticationService.register(request);
         return  ResponseEntity.ok(new SuccessMessage("User account has been registered!"));
     }
 
+    @PostMapping(value = "/login")
+    public LoginRespond login(@Valid @RequestBody LoginRequest request){
+        String jwt = authenticationService.login(request);
+        return new LoginRespond(jwt);
+    }
 }

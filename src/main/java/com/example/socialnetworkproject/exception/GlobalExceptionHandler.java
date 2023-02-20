@@ -1,7 +1,8 @@
 package com.example.socialnetworkproject.exception;
 
-import com.example.socialnetworkproject.models.entities.DTO.reply.ErrorMessage;
+import com.example.socialnetworkproject.models.entities.DTO.respond.ErrorMessage;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -12,9 +13,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(WrongInformationException.class)
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    public ErrorMessage handleAccountExistException(WrongInformationException ex, WebRequest request) {
+    public ErrorMessage handleAccountExistException(WrongInformationException exception, WebRequest request) {
+        return new ErrorMessage( exception.getMessage());
+    }
 
-        return new ErrorMessage( ex.getMessage());
+    @ExceptionHandler(UsernameNotFoundException.class)
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ErrorMessage handleNotFoundAccountException(UsernameNotFoundException exception, WebRequest request){
+        return new ErrorMessage(exception.getMessage());
     }
 
 }

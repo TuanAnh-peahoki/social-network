@@ -19,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class UserDocument {
 
-    @Field(value = "user_id")
+    @Field(value = "id")
     @Id
     private String userID;
 
