@@ -53,7 +53,7 @@ public class Information {
     @JoinColumn(name = "background_asset_id")
     private Assets backgroundAsset;
 
-    @OneToOne(cascade = {CascadeType.ALL})
+    @OneToOne
     @JoinColumn(name = "user_id")
     private Users users;
 

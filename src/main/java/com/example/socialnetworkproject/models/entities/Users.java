@@ -43,16 +43,16 @@ public class Users {
     @Column(name = "user_email")
     private String email;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Posts> posts;
 
-    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Comments> comments;
 
-    @OneToOne(mappedBy = "users")
+    @OneToOne(mappedBy = "users",cascade = CascadeType.ALL)
     private Information information;
 
-    @OneToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Expressions> expressions;
 
 

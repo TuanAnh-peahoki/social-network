@@ -1,6 +1,8 @@
 package com.example.socialnetworkproject.exception;
 
 import com.example.socialnetworkproject.models.entities.DTO.respond.ErrorMessage;
+import io.jsonwebtoken.MalformedJwtException;
+import org.apache.catalina.webresources.ExtractingRoot;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -23,4 +25,9 @@ public class GlobalExceptionHandler {
         return new ErrorMessage(exception.getMessage());
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    public ErrorMessage handleIllegalArgumentException(IllegalArgumentException exception, WebRequest request){
+        return new ErrorMessage(exception.getMessage());
+    }
 }

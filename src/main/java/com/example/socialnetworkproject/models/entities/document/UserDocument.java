@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.solr.client.solrj.beans.Field;
+import org.springframework.data.solr.core.mapping.Indexed;
 import org.springframework.data.solr.core.mapping.SolrDocument;
 
 import javax.persistence.Id;
@@ -15,33 +16,19 @@ import java.util.UUID;
 @Setter
 @Getter
 @AllArgsConstructor
-@SolrDocument(collection = "user")
+@SolrDocument(solrCoreName = "user")
 @NoArgsConstructor
 public class UserDocument {
 
-    @Field(value = "id")
+    @Indexed(name = "id",type = "string")
     @Id
     private String userID;
 
-    @Field(value = "user_name")
+
+    @Indexed(name = "userName",type = "string")
     private String userName;
 
-    @Field(value = "email")
+    @Indexed(name = "email" , type = "string")
     private String email;
-
-    @Field(value = "first_name")
-    private String firstName;
-
-    @Field(value = "last_name")
-    private String lastName;
-
-    @Field
-    private String school;
-
-    @Field
-    private LocalDateTime birthday;
-
-    @Field
-    private String hobby;
 
 }

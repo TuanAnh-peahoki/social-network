@@ -1,5 +1,6 @@
 package com.example.socialnetworkproject.services.impl;
 
+import com.example.socialnetworkproject.events.AddDocumentEvent;
 import com.example.socialnetworkproject.models.entities.DTO.request.LoginRequest;
 import com.example.socialnetworkproject.models.entities.DTO.request.SignUpRequest;
 import com.example.socialnetworkproject.models.entities.Information;
@@ -10,6 +11,7 @@ import com.example.socialnetworkproject.services.AuthenticationService;
 import com.example.socialnetworkproject.validation.Validator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +27,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private Validator validator;
 
+    private ApplicationEventPublisher eventPublisher;
+
     @Autowired
     public AuthenticationServiceImpl (UserRepository userRepository,InformationRepository informationRepository, BCryptPasswordEncoder passwordEncoder
-                                    , Validator validator){
+                                    , Validator validator, ApplicationEventPublisher eventPublisher){
         this.userRepository = userRepository;
         this.informationRepository = informationRepository;
         this.passwordEncoder = passwordEncoder;
         this.validator = validator;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -50,12 +55,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         information.setUsers(users);
 
-        informationRepository.save(information);
+        userRepository.save(users);
 
+        eventPublisher.publishEvent(new AddDocumentEvent(this,users));
     }
 
     @Override
     public String login(LoginRequest request){
-        if()
+        return "Hello";
     }
 }
