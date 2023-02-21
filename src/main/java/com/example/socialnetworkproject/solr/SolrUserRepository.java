@@ -13,5 +13,6 @@ public interface SolrUserRepository extends SolrCrudRepository<UserDocument, Str
     @Query("email:*?0*")
     Optional<UserDocument> getUserDocumentByEmail(String email);
 
-    Optional<UserDocument> findUserDocumentByUserName(String userName);
+    @Query("id:*?0*")
+    Optional<UserDocument> findUserDocumentByUserId(String userId);
 }

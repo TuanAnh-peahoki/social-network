@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -19,5 +20,6 @@ public interface UserRepository extends JpaRepository<Users, UUID> {
     Optional<Users> findByEmail(@Param("email") String email);
 
     @Query("SELECT u FROM Users u WHERE u.userId = :userId")
-    Users findByUserId(@Param("userId") UUID userId);
+    Optional<Users> findByUserId(@Param("userId") UUID userId);
+
 }

@@ -42,26 +42,26 @@ public class Posts {
     @Column(name = "is_commet_allow")
     private Boolean isCommentAllowed;
 
-    @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL)
     private List<Comments> comments;
 
-
-    @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL)
     private List<PostRecords> postRecords;
 
-    @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL)
     private List<Assets> assets;
 
-    @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL)
     private List<Expressions> expressions;
 
-    @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "posts")
     private List<UserTagged> userTaggeds;
 
-    @OneToMany(mappedBy = "posts", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "posts")
     private List<SystemTagged> systemTaggeds;
 
-    @OneToMany(mappedBy = "posts", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "posts")
     private List<PostNotification> postNotifications;
+
 
 }

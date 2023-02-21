@@ -29,11 +29,12 @@ public class UserServicesImpl implements UserServices, UserDetailsService {
         }
         return new CustomUserDetails(user);
     }
+
     public UserDetails loadUserByUserId(UUID userId) {
-        Users user = userRepository.findByUserId(userId);
-        if(user == null){
+        Optional<Users> user = userRepository.findByUserId(userId);
+        if(user.isEmpty()){
             throw new UsernameNotFoundException("Not found " + userId + " !!!");
         }
-        return new CustomUserDetails(user);
+        return new CustomUserDetails(user.get());
     }
 }
