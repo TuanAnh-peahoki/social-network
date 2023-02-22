@@ -58,6 +58,7 @@ public class WebSecurityConfig{
                 .antMatchers("/api/auth/login").permitAll()
                 .antMatchers("/api/auth/deleteSolr").permitAll()
                 .antMatchers("/api/auth/forgot-password").permitAll()
+                .antMatchers("/api/auth/forgot-password/reset/**").permitAll()
                 .anyRequest().authenticated();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();

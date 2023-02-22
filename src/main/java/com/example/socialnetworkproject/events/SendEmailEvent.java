@@ -10,10 +10,10 @@ import org.springframework.security.core.userdetails.User;
 @Setter
 public class SendEmailEvent extends ApplicationEvent {
     private String email;
-    private Users user;
-    public SendEmailEvent(Object object, String email, Users user){
+    private String encodedString;
+    public SendEmailEvent(Object object, String email, String encodedString){
         super(object);
         this.email = email;
-        this.user = user;
+        this.encodedString = encodedString;
     }
 }

@@ -2,23 +2,22 @@ package com.example.socialnetworkproject.services.impl;
 
 import com.example.socialnetworkproject.events.AddDocumentEvent;
 import com.example.socialnetworkproject.events.SendEmailEvent;
+import com.example.socialnetworkproject.exception.WrongInformationException;
 import com.example.socialnetworkproject.models.entities.CustomUserDetails;
 import com.example.socialnetworkproject.models.entities.DTO.request.LoginRequest;
-import com.example.socialnetworkproject.models.entities.DTO.request.PasswordResetRequest;
 import com.example.socialnetworkproject.models.entities.DTO.request.SignUpRequest;
+import com.example.socialnetworkproject.models.entities.DTO.request.UpdatePasswordRequest;
 import com.example.socialnetworkproject.models.entities.DTO.respond.LoginRespond;
 import com.example.socialnetworkproject.models.entities.Information;
 import com.example.socialnetworkproject.models.entities.Users;
-import com.example.socialnetworkproject.models.entities.document.UserDocument;
-import com.example.socialnetworkproject.repositories.InformationRepository;
 import com.example.socialnetworkproject.repositories.UserRepository;
+import com.example.socialnetworkproject.security.BaseTokenGenerator;
 import com.example.socialnetworkproject.security.JwtAuthenticationFilter;
 import com.example.socialnetworkproject.security.JwtTokenProvider;
 import com.example.socialnetworkproject.services.AuthenticationService;
 import com.example.socialnetworkproject.solr.SolrUserRepository;
 import com.example.socialnetworkproject.validation.Validator;
-import org.apache.catalina.User;
-import org.hibernate.validator.cfg.defs.EmailDef;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -26,21 +25,17 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
+import javax.transaction.Transactional;
 import java.util.UUID;
 
-
+@Slf4j
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private UserRepository userRepository;
-
-    private InformationRepository informationRepository;
 
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -56,12 +51,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private SolrUserRepository solrUserRepository;
 
+    private static final String secretCode = "kt-social-network ";
+
+
+
     @Autowired
-    public AuthenticationServiceImpl (UserRepository userRepository,InformationRepository informationRepository, BCryptPasswordEncoder passwordEncoder
-                                    , Validator validator, ApplicationEventPublisher eventPublisher, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager
-                                    , JwtAuthenticationFilter jwtAuthenticationFilter, SolrUserRepository solrUserRepository){
+    public AuthenticationServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder
+            , Validator validator, ApplicationEventPublisher eventPublisher, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager
+            , JwtAuthenticationFilter jwtAuthenticationFilter, SolrUserRepository solrUserRepository) {
         this.userRepository = userRepository;
-        this.informationRepository = informationRepository;
         this.passwordEncoder = passwordEncoder;
         this.validator = validator;
         this.eventPublisher = eventPublisher;
@@ -69,6 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         this.authenticationManager = authenticationManager;
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.solrUserRepository = solrUserRepository;
+
     }
 
     @Override
@@ -81,18 +80,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         request.setPassword(passwordEncoded);
 
-        BeanUtils.copyProperties(request,users);
+        BeanUtils.copyProperties(request, users);
 
-        BeanUtils.copyProperties(request,information);
+        BeanUtils.copyProperties(request, information);
 
         information.setUsers(users);
 
         userRepository.save(users);
 
-        eventPublisher.publishEvent(new AddDocumentEvent(this,users));
+        eventPublisher.publishEvent(new AddDocumentEvent(this, users));
     }
 
-    public LoginRespond login(LoginRequest request){
+    public LoginRespond login(LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getUserName(),
@@ -105,16 +104,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public void resetPassword(PasswordResetRequest request) {
+    public void resetPassword(String email, String userId) {
+        String encryptUserId = secretCode + userId;
+        String encryptString = BaseTokenGenerator.encrypt(encryptUserId);
+        eventPublisher.publishEvent(new SendEmailEvent(this, email, encryptString));
+    }
 
+    @Transactional
+    @Override
+    public void changePassword(String encodedId, UpdatePasswordRequest passwordRequest) {
+        String decryptString = BaseTokenGenerator.decrypt(encodedId);
 
-            Optional<Users> user = userRepository.findByEmail(request.getEmail());
-            if(user.isEmpty()){
-                throw  new UsernameNotFoundException("Not found user !!!");
-                }
-            else {
-                eventPublisher.publishEvent(new SendEmailEvent(this,request.getEmail(), user.get()));
-            }
+        if (!decryptString.startsWith(secretCode)) {
+            throw new WrongInformationException("This email address doesn't exist !!!");
         }
-
+        UUID userId = UUID.fromString(decryptString.substring(18));
+        String newPassword = passwordEncoder.encode(passwordRequest.getNewPassword());
+        int colummn  = userRepository.updateEmail(newPassword,userId);
+        log.info(String.valueOf(colummn));
+    }
 }

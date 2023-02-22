@@ -52,9 +52,6 @@ public class Users {
     @OneToOne(mappedBy = "users",cascade = CascadeType.ALL)
     private Information information;
 
-    @OneToOne(mappedBy = "users",cascade = CascadeType.ALL)
-    private PasswordToken token;
-
     @OneToMany(mappedBy = "users", cascade = CascadeType.ALL)
     private List<Expressions> expressions;
 

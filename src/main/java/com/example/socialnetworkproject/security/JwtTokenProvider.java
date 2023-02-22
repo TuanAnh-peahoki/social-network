@@ -14,7 +14,7 @@ import java.util.UUID;
 @Component
 public class JwtTokenProvider {
 
-    private final String JWT_SECRET = "Bearer";
+    private final String JWT_SECRET = "kt-social-network";
 
     private final long JWT_EXPIRATION = 604800000L;
     public String generateToken(CustomUserDetails userDetails){
